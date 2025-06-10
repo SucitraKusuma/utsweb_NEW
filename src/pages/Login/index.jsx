@@ -22,7 +22,7 @@ const LoginPage = () => {
     <Layout className="layout-default layout-signin">
       <Header>
         <div className="header-col header-brand">
-          <h5>WebfmSI.com</h5>
+          <h5>rems</h5>
         </div>
         <div className="header-col header-nav">test</div>
         <div className="header-col header-btn">

@@ -25,6 +25,7 @@ import {
   ProductOutlined,
   ShoppingCartOutlined,
   UnorderedListOutlined,
+  PlayCircleOutlined,
 } from "@ant-design/icons";
 
 function Sidenav({ color }) {
@@ -73,9 +74,9 @@ function Sidenav({ color }) {
 
   const menuItems = [
     {
-      key: "/dashboard",
+      key: "/SI 4C",
       label: (
-        <NavLink to="/dashboard">
+        <NavLink to="/SI">
           <span
             className="icon"
             style={{
@@ -122,6 +123,22 @@ function Sidenav({ color }) {
             <FileImageOutlined />
           </span>
           <span className="label">Galeri</span>
+        </NavLink>
+      ),
+    },
+    {
+      key: "/playlist",
+      label: (
+        <NavLink to="/playlist">
+          <span
+            className="icon"
+            style={{
+              backgroundColor: selectedKey === "playlist" ? "#f0f2f5" : "",
+            }}
+          >
+            <PlayCircleOutlined />
+          </span>
+          <span className="label">Playlist</span>
         </NavLink>
       ),
     },

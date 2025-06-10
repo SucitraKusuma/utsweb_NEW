@@ -128,6 +128,7 @@ function Dashboard() {
                 "Products",
                 24,
               )}
+              <div style={{ marginRight: "150px" }}></div>
             </Flex>
             <Divider />
             <Flex justify="flex-start">

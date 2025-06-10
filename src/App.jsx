@@ -10,6 +10,8 @@ import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/layout/PrivateRoute";
 
 import Blank from "./pages/Blank";
+import Gallery from "./pages/Gallery";
+import Playlist from "./pages/Playlist";
 
 function App() {
   return (
@@ -24,7 +26,7 @@ function App() {
         />
         <Route
           exact
-          path="/books"
+          path="/class4c"
           element={<PrivateRoute component={<Blank />} />}
         />
         <Route
@@ -70,8 +72,13 @@ function App() {
         <Route
           exact
           path="/gallery"
-          element={<PrivateRoute component={<Blank />} />}
+          element={<PrivateRoute component={<Gallery />} />}
         />
+        <Route
+          exact
+          path="/playlist"
+          element={<PrivateRoute component={<Playlist />} />}
+        />     
       </Routes>
     </div>
   );

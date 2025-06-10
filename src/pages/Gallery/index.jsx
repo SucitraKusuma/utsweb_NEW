@@ -1,357 +1,226 @@
-import { CheckCircleIcon } from "@heroicons/react/16/solid";
-import ReactPlayer from "react-player";
-import {
-  Col,
-  Row,
-  Typography,
-  Card,
-  List,
-  Skeleton,
-  Input,
-  notification,
-  FloatButton,
-  Drawer,
-  Form,
-  Button,
-  Popconfirm,
-  Divider,
-} from "antd";
-import {
-  SearchOutlined,
-  PlusCircleOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
-
-import { useEffect, useState } from "react";
-import { getData, sendData, deleteData } from "../../utils/api";
-import { ellipsisGenerator } from "../../utils/ui";
+import { Col, Row, Typography, Card, List, Divider, Skeleton , FloatButton, Drawer, Form, Input, Button, notification, Popconfirm } from "antd";
+import { getData, sendData, deleteData} from "../../utils/api";
+import { useState, useEffect } from "react";
+import { PlusCircleOutlined, SearchOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
-const dataDummy = [
-  { key: 1, title: "John", description: "The boy with blue hat" },
-  { key: 2, title: "Jean", description: "The girl with red hat" },
-  { key: 3, title: "Foo", description: "The mysterious person in the class" },
-  { key: 4, title: "Romeo", description: "The boy with golden hairs" },
-  { key: 5, title: "Juliet", description: "The girl with golden hairs" },
-];
-
 const Gallery = () => {
-  const [form] = Form.useForm();
+  const [dataSources, setDataSources] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); 
+
+  const [searchText, setSearchText] = useState(""); //buat state untuk search
+
+  //buat state untuk menandai satus tutup/buka drawer
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [form] = Form.useForm(); //buat form untuk drawer
+
   const [api, contextHolder] = notification.useNotification();
-
-  const [dataSource, setDataSource] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [searchText, setSearchText] = useState("");
-  const [dataList, setDataList] = useState([]);
-  const [searchTextList, setSearchTextList] = useState("");
-
-  const [isDrawer, setIsDrawer] = useState(false);
 
   const [isEdit, setIsEdit] = useState(false);
   const [idSelected, setIdSelected] = useState(null);
 
-  useEffect(() => {
-    getDataGallery();
-    getDataDummy();
-  }, []);
-
-  const getDataDummy = () => {
-    setDataList(dataDummy);
-  };
-
-  const showAlert = (status, title, description) => {
-    api[status]({
+  const openNotificationWithIcon = (type, title, description) => {
+    api[type]({
       message: title,
       description: description,
     });
   };
 
-  const getDataGallery = (isNoLoading) => {
-    if (!isNoLoading) {
-      setIsLoading(true);
-    }
+  useEffect(() => {
+    getDataGallery();
+  }, []);
 
-    getData("/api/natures")
+  const getDataGallery = () => {
+    getData("/api/v1/natures")
       .then((resp) => {
-        setIsLoading(false);
         if (resp) {
-          setDataSource(resp);
+          setDataSources(resp);
         }
+        setIsLoading(false); 
       })
       .catch((err) => {
-        setIsLoading(false);
         console.log(err);
+        setIsLoading(false); 
       });
   };
 
   const handleSearch = (value) => {
     setSearchText(value.toLowerCase());
   };
-
-  let dataSourceFiltered = dataSource.filter((item) => {
-    return (
-      item?.name_natures.toLowerCase().includes(searchText) ||
-      item?.description.toLowerCase().includes(searchText)
-    );
+  
+  let dataSourcesFiltered = dataSources.filter((item) => {
+    return item?.name_natures.toLowerCase().includes(searchText);
   });
 
-  const handleSearchList = (e) => {
-    setSearchTextList(e.toLowerCase());
-  };
+  const openDrawer = () => {
+    setIsOpenDrawer(true); 
+  }
 
-  let dataListFiltered = dataList.filter((item) => {
-    return item?.title.toLowerCase().includes(searchTextList);
-  });
-
-  // const handleDrawer = () => {
-  //   setIsDrawer(true);
-  // };
-
-  const handleDrawer = () => {
-    setIsDrawer(true);
-    console.log("handle drawer here");
-  };
-
-  const onCloseDrawer = () => {
+  const onClose = () => {
     if (isEdit) {
-      form.resetFields();
-      setIsEdit(false);
-      setIdSelected(null);
+      form.resetFields(); //reset form jika edit
+      setIsEdit(false); //set isEdit ke false
+      setIdSelected(null); //set idSelected ke null
     }
-    setIsDrawer(false);
-  };
+    setIsOpenDrawer(false); 
+  }
 
   const handleDrawerEdit = (record) => {
-    setIsDrawer(true);
-    setIsEdit(true);
-    setIdSelected(record?.id);
-    form.setFieldValue("name_natures", record?.name_natures);
-    form.setFieldValue("description", record?.description);
+    //buka drawer dan set data yang dipilih
+    setIsOpenDrawer(true); 
 
-    // filled form here
+    //set data yang dipilih
+    setIsEdit(true); 
+    setIdSelected(record.id);
+    form.setFieldsValue({
+      name_natures: record.name_natures,
+      description_natures: record.description,
+    });
   };
 
   const handleSubmit = () => {
-    let nameNatures = form.getFieldValue("name_natures");
-    let description = form.getFieldValue("description");
+    //buat aksi kirim data disini
+    let url = isEdit ? `/api/v1/natures/${idSelected}` : "/api/v1/natures"; 
+    let msg = isEdit ? "Sukses memperbarui data" : "Sukses menambahkan data";
 
-    //mengirim data ke API
-    let formData = new FormData();
-    formData.append("name_natures", nameNatures);
-    formData.append("description", description);
+    let nameNatures = form.getFieldValue("name_natures"); //ambil data dari form
+    let descriptionNatures = form.getFieldValue("description_natures"); //ambil data dari form
 
-    let url = isEdit ? `/api/natures/${idSelected}` : "/api/natures";
+    let formData = new FormData(); //buat form data untuk kirim data ke server
+    formData.append("name_natures", nameNatures); //isi form data dengan data dari form
+    formData.append("description", descriptionNatures); //isi form data dengan data dari form
 
-    sendData(url, formData)
-      .then((resp) => {
-        if (resp) {
-          showAlert(
-            "success",
-            "Data terkirim",
-            "Sukses mengirim data, data tersimpan",
-          );
-          form.resetFields();
-          getDataGallery();
-          onCloseDrawer();
-        } else {
-          showAlert("error", "Pengiriman gagal", "Data tidak bisa disimpan");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        showAlert("error", "Pengiriman Gagal", "Data tidak dapat dikirim!");
-      });
+    sendData(url, formData) //kirim data ke server
+    .then((resp) => {
+      if (resp ?.datas) {
+        openNotificationWithIcon(
+          "success", msg,
+        );
+        setIsOpenDrawer(false); //tutup drawer 
+        getDataGallery(); 
+        onClose(); //reset form
+    } else {
+       openNotificationWithIcon(
+        "error", 
+        "Data natures", 
+        "Data gagal dikirim"
+      ); 
+    }
+    })
   };
-  // const handleSubmit = () => {
-  //   let nameNatures = form.getFieldValue("name_natures");
-  //   let description = form.getFieldValue("description");
 
-  //   let formData = new FormData();
-  //   formData.append("name_natures", nameNatures);
-  //   formData.append("description", description);
-
-  //   let url = "/api/natures";
-  //   sendData(url, formData)
-  //     .then((resp) => {
-  //       if (resp?.datas) {
-  //         showAlert("success", "Data terkirim", "Data berhasil tersimpan");;
-  //         getDataGallery();
-  //         onCloseDrawer;
-  //       } else {
-  //         showAlert("error", "Gagal terkirim", "Data tidak berhasil dikirim");
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       showAlert("error", "Gagal terkirim", "Koneksi ke api tidak berhasil");
-  //     });
-  // };
-
-  const drawerSection = () => {
-    return (
-      <Drawer
-        title={"Add Data"}
-        onClose={onCloseDrawer}
-        open={isDrawer}
-        width={"680px"}
-        // style={{ width: "900px" }}
-        extra={
-          <Button type="primary" onClick={() => handleSubmit()}>
-            Submit
-          </Button>
-        }
-      >
-        <ReactPlayer url="https://youtu.be/YFmV_MRSD7M?si=yInY8hPWNulesxFj" />
-        <Divider />
-        <Form layout="vertical" name="natures_form" form={form}>
-          <Form.Item name="name_natures" label="Name of natures" required>
-            <Input placeholder="eg. Mountain" />
-          </Form.Item>
-          <Form.Item name="description" label="Description of natures" required>
-            <Input.TextArea rows={4} placeholder="eg. Mountain" />
-          </Form.Item>
+  const renderDrawer = () => {
+    return(
+    <Drawer
+      title="Form Natures"
+      closable={{ 'aria-label': 'Close Button' }}
+      onClose={onClose}
+      open={isOpenDrawer}
+      extra={<Button type="primary" onClick={() => handleSubmit()}>Submit </Button>}
+    >
+      <Form form={form} layout="vertical">
+        <Form.Item 
+        label = "Name of natures" 
+        name="name_natures"
+        rules={[{ required: true, message: 'Must filled' }]}
+        >
+          <Input placeholder="eg. Mountain" />
+        </Form.Item>
+        <Form.Item 
+        label = "Description of natures" 
+        name="description_natures"
+        rules={[{ required: true, message: 'Must filled' }]}
+        >
+          <Input.TextArea rows={3} placeholder="eg. Description of natures" />
+        </Form.Item>
         </Form>
-      </Drawer>
-    );
-  };
+    </Drawer>
+    )
+  }
 
-  const confirmDelete = (record_id) => {
-    let url = `/api/natures/${record_id}`;
+  const confirmDelete = (record) => {
+    let url = `/api/v1/natures/${record?.id}`;
     let params = new URLSearchParams();
-    params.append("id", record_id);
+    params.append("id", record?.id);
+
     deleteData(url, params)
       .then((resp) => {
         if (resp?.status == 200) {
-          showAlert("success", "Data deleted", "Data berhasil terhapus");
-          getDataGallery(true);
-          form.resetFields();
-          onCloseDrawer();
+          openNotificationWithIcon("success", "Data terhapus", "berhasil menghapus data");
+          getDataGallery();
         } else {
-          showAlert("error", "Failed", "Data gagal terhapus");
+          openNotificationWithIcon("error", "Data gagal terhapus", "data tidak dapat dihapus");
         }
       })
       .catch((err) => {
         console.log(err);
-        showAlert("error", "Failed", "Data gagal terhapus");
-      });
-  };
-
-  let dataListFilters = dataList?.filter((item) => {
-    return (
-      item?.title.toLowerCase().includes(searchTextList) ||
-      item?.description.toLowerCase().includes(searchTextList)
-    );
-  });
+    });
+};
 
   return (
     <div className="layout-content">
       {contextHolder}
+    <FloatButton 
+      icon={<PlusCircleOutlined/>} 
+      type="primary" 
+      style={{ insetInlineEnd: 24 }} 
+      onClick={() => openDrawer()}
+       />
+      {renderDrawer()}
+
       <Row gutter={[24, 0]}>
         <Col xs={23} className="mb-24">
           <Card bordered={false} className="circlebox h-full w-full">
-            <FloatButton
-              type="primary"
-              tooltip={<div>Add gallery</div>}
-              icon={<PlusCircleOutlined />}
-              onClick={() => handleDrawer()}
-            />
-
-            {/* {drawerSection()}
+            <Title> List of Natures </Title>
+            <Text style={{ fontSize: "12pt" }}>Selamat Datang </Text>
+            <Divider />
+            
             <Input
-              prefix={<SearchOutlined />}
-              placeholder="Search here"
-              allowClear
-              size="large"
-              onChange={(e) => handleSearchList(e.target.value)}
+             prefix={<SearchOutlined />}
+             placeholder="input search text"
+             allowClear
+             size='large'
+             onChange={(e) => handleSearch(e.target.value)}
             />
 
-            <List
-              header={<div>Header</div>}
-              footer={<div>Footer</div>}
-              bordered
-              dataSource={dataListFilters}
-              renderItem={(item) => (
-                <List.Item>
-                  <Typography.Text mark>[{item?.title}]</Typography.Text>{" "}
-                  {item?.description}
-                </List.Item>
-              )}
-            /> */}
-
-            <Title>Natures Gallery</Title>
-            <Text style={{ fontSize: "12pt" }}>List of natures</Text>
-            <Input
-              prefix={<SearchOutlined />}
-              placeholder="input search text"
-              className="header-search"
-              allowClear
-              size="large"
-              onChange={(e) => handleSearch(e.target.value)}
-            />
-            {dataSource?.length > 0 && !isLoading ? (
+            {isLoading && dataSources.length <= 0 ? (
+              <Skeleton active />
+            ) : (
+            
               <List
-                grid={{
-                  gutter: 16,
-                  xs: 1,
-                  sm: 1,
-                  md: 2,
-                  lg: 3,
-                  xl: 3,
-                }}
-                dataSource={dataSourceFiltered ?? []}
+                grid={{ gutter: 16, xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }}
+                dataSource={dataSourcesFiltered?? []}
                 renderItem={(item) => (
-                  <List.Item key={item?.id}>
+                  <List.Item>
                     <Card
-                      cover={
-                        <img
-                          src={`${item?.url_photo}`}
-                          alt="categories-image"
-                        />
-                      }
+                      hoverable
+                      cover={<img alt="example" src={item?.url_photo} />}
                       actions={[
-                        <EditOutlined
-                          key={item?.id}
-                          onClick={() => handleDrawerEdit(item)}
-                        />,
-                        <SearchOutlined
-                          key={item?.id}
-                          onClick={() => handleDrawerEdit(item)}
-                        />,
-                        <Popconfirm
-                          key={item?.id}
-                          title="Delete the task"
-                          description={`Are you sure to delete ${item?.name_natures} ?`}
-                          okText="Yes"
-                          onConfirm={() => confirmDelete(item?.id)}
-                          cancelText="No"
-                        >
-                          <DeleteOutlined key={item?.id} />
-                        </Popconfirm>,
+                        <EditOutlined key={item.id} onClick={() => handleDrawerEdit(item)} />,
+                        <SearchOutlined key={item.id} />,
+                      
+                      
+                      <Popconfirm
+                        key={item?.id}
+                        title="Delete the task"
+                        description="Are you sure to delete this task?"
+                        onConfirm={() => confirmDelete(item)}
+                        okText="Yes"
+                        cancelText="No"
+                       >
+                         <DeleteOutlined key={item?.id} />
+                      </Popconfirm>,
                       ]}
                     >
                       <Card.Meta
-                        avatar={<CheckCircleIcon />}
-                        title={
-                          <Text type={searchText?.length > 0 && "danger"}>
-                            {item?.name_natures}
-                          </Text>
-                        }
-                        description={
-                          <Text ellipsis={ellipsisGenerator(item?.description)}>
-                            {item?.description}
-                          </Text>
-                        }
+                        title={item?.name_natures}
+                        description={item?.description}
                       />
                     </Card>
                   </List.Item>
                 )}
               />
-            ) : isLoading ? (
-              <Skeleton active />
-            ) : (
-              "Data tidak ada"
             )}
           </Card>
         </Col>
