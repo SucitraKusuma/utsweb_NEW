@@ -8,18 +8,13 @@ const { Title, Text } = Typography;
 const Gallery = () => {
   const [dataSources, setDataSources] = useState([]);
   const [isLoading, setIsLoading] = useState(true); 
-
   const [searchText, setSearchText] = useState(""); //buat state untuk search
-
   //buat state untuk menandai satus tutup/buka drawer
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [form] = Form.useForm(); //buat form untuk drawer
-
   const [api, contextHolder] = notification.useNotification();
-
   const [isEdit, setIsEdit] = useState(false);
   const [idSelected, setIdSelected] = useState(null);
-
   const openNotificationWithIcon = (type, title, description) => {
     api[type]({
       message: title,

@@ -172,26 +172,13 @@ export const deleteDataPrivateURLEncoded = async (url, data) => {
   //204 -> No Content, but success
   //NOTE : You must special handle for HTTP status above
   // var token = localStorage.getItem("token_auth");
-  let token = await jwtStorage.retrieveToken();
+
   return fetch(REACT_APP_API_URL + url, {
     method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-    },
     body: data,
   })
-    .then((response) =>
-      response.status === 401
-        ? { isExpiredJWT: true }
-        : response.status >= 200 &&
-            response.status <= 299 &&
-            response.status !== 204
-          ? response.json()
-          : response,
-    )
-    .then((data) => data)
-    .catch((err) => console.log(err));
+  .then((response) => response)
+  .catch((err) => console.log(err));
 };
 
 export const deleteDataPrivateJSON = async (url, data) => {
