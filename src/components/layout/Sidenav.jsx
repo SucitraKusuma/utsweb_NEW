@@ -14,13 +14,13 @@
 import { Menu } from "antd";
 import { NavLink, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { FileImageOutlined, PlayCircleOutlined, PieChartOutlined } from "@ant-design/icons";
+import { FileImageOutlined, PlayCircleOutlined, PieChartOutlined, EditOutlined, HomeOutlined } from "@ant-design/icons";
 
 function Sidenav({ color }) {
   const { pathname } = useLocation();
   const page = pathname.replace("/", "");
 
-  const [selectedKey, setSelectedKey] = useState("dashboard");
+  const [selectedKey, setSelectedKey] = useState(page);
 
   useEffect(() => {
     setSelectedKey(page);
@@ -44,52 +44,106 @@ function Sidenav({ color }) {
 
   const menuItems = [
     {
-      key: "/playlist-view",
+      key: "beranda",
       label: (
-        <NavLink to="/playlist-view">
+        <NavLink to="/beranda" style={{ display: 'flex', alignItems: 'center' }}>
           <span
             className="icon"
             style={{
-              backgroundColor: selectedKey === "playlist-view" ? "#f0f2f5" : "",
+              backgroundColor: selectedKey === "beranda" ? "#1890ff" : "",
+              color: selectedKey === "beranda" ? "#fff" : "",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '32px',
+              height: '32px',
+              borderRadius: '8px',
+              marginRight: '12px'
+            }}
+          >
+            <HomeOutlined />
+          </span>
+          <span className="label" style={{ color: selectedKey === "beranda" ? "#1890ff" : "" }}>
+            Beranda
+          </span>
+        </NavLink>
+      ),
+    },
+    {
+      key: "playlist-view",
+      label: (
+        <NavLink to="/playlist-view" style={{ display: 'flex', alignItems: 'center' }}>
+          <span
+            className="icon"
+            style={{
+              backgroundColor: selectedKey === "playlist-view" ? "#1890ff" : "",
+              color: selectedKey === "playlist-view" ? "#fff" : "",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '32px',
+              height: '32px',
+              borderRadius: '8px',
+              marginRight: '12px'
             }}
           >
             <PlayCircleOutlined />
           </span>
-          <span className="label">Galeri Playlist</span>
+          <span className="label" style={{ color: selectedKey === "playlist-view" ? "#1890ff" : "" }}>
+            Galeri Playlist
+          </span>
         </NavLink>
       ),
     },
- 
     {
-      key: "/playlist",
+      key: "playlist",
       label: (
-        <NavLink to="/playlist">
+        <NavLink to="/playlist" style={{ display: 'flex', alignItems: 'center' }}>
           <span
             className="icon"
             style={{
-              backgroundColor: selectedKey === "playlist" ? "#f0f2f5" : "",
+              backgroundColor: selectedKey === "playlist" ? "#1890ff" : "",
+              color: selectedKey === "playlist" ? "#fff" : "",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '32px',
+              height: '32px',
+              borderRadius: '8px',
+              marginRight: '12px'
             }}
           >
-            <PlayCircleOutlined />
+            <EditOutlined />
           </span>
-          <span className="label">Playlist</span>
+          <span className="label" style={{ color: selectedKey === "playlist" ? "#1890ff" : "" }}>
+            Atur Playlist
+          </span>
         </NavLink>
       ),
     },
-
     {
-      key: "/playlist-stats",
+      key: "playlist-stats",
       label: (
-        <NavLink to="/playlist-stats">
+        <NavLink to="/playlist-stats" style={{ display: 'flex', alignItems: 'center' }}>
           <span
             className="icon"
             style={{
-              backgroundColor: selectedKey === "playlist-stats" ? "#f0f2f5" : "",
+              backgroundColor: selectedKey === "playlist-stats" ? "#1890ff" : "",
+              color: selectedKey === "playlist-stats" ? "#fff" : "",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '32px',
+              height: '32px',
+              borderRadius: '8px',
+              marginRight: '12px'
             }}
           >
             <PieChartOutlined />
           </span>
-          <span className="label">Statistik Playlist</span>
+          <span className="label" style={{ color: selectedKey === "playlist-stats" ? "#1890ff" : "" }}>
+            Statistik Playlist
+          </span>
         </NavLink>
       ),
     },
@@ -99,10 +153,28 @@ function Sidenav({ color }) {
     <>
       <div className="brand">
         <img src="/logo.png" alt="" />
-        <span>UTS Web</span>
+        <span>Web Programming</span>
       </div>
       <hr />
-      <Menu theme="light" mode="inline" selectedKeys={[selectedKey]} items={menuItems} />
+      <Menu 
+        theme="light" 
+        mode="inline" 
+        selectedKeys={[selectedKey]} 
+        items={menuItems}
+        style={{ 
+          border: 'none',
+          '& .ant-menu-item': {
+            margin: '4px 0',
+            padding: '0 16px',
+            height: '48px',
+            lineHeight: '48px'
+          },
+          '& .ant-menu-item:hover': {
+            backgroundColor: '#f5f5f5',
+            borderRadius: '8px'
+          }
+        }}
+      />
     </>
   );
 }

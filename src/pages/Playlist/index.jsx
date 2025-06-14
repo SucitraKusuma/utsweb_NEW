@@ -215,8 +215,8 @@ const Playlist = () => {
       <Row gutter={[24, 0]}>
         <Col xs={23} className="mb-24">
           <Card bordered={false} className="circlebox h-full w-full">
-            <Title>Daftar Playlist</Title>
-            <Text style={{ fontSize: "12pt" }}>Selamat Datang di Manajemen Playlist</Text>
+            <Title>Atur Playlistmu Sendiri</Title>
+            <Text style={{ fontSize: "12pt" }}>Satukan semua video favoritmu dalam satu tempat spesial!</Text>
             <Divider />
             
             <Input
@@ -264,14 +264,14 @@ const Playlist = () => {
                           icon={<EditOutlined />} 
                           onClick={() => handleDrawerEdit(item)}
                           key="edit"
-                          style={{ 
-                            minWidth: 70,
+                          style={{
+                            minWidth: 65,
                             height: 32,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontWeight: 500,
-                            margin: '0 4px'
+                            padding: '0 8px'
                           }}
                         >
                           Edit
@@ -287,13 +287,13 @@ const Playlist = () => {
                             type="text" 
                             icon={<PlayCircleOutlined />}
                             style={{
-                              minWidth: 70,
+                              minWidth: 65,
                               height: 32,
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
                               fontWeight: 500,
-                              margin: '0 4px'
+                              padding: '0 8px'
                             }}
                           >
                             Play
@@ -310,16 +310,15 @@ const Playlist = () => {
                           <Button 
                             type="text" 
                             danger 
-                            icon={<DeleteOutlined />}
-                            style={{ 
-                              minWidth: 70,
+                            icon={<DeleteOutlined />} 
+                            style={{
+                              minWidth: 65,
                               height: 32,
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
                               fontWeight: 500,
-                              marginLeft: '0px',
-                              marginRight: '-5px'
+                              padding: '0 8px'
                             }}
                           >
                             Delete
@@ -333,7 +332,7 @@ const Playlist = () => {
                         flexDirection: 'column'
                       }}
                       bodyStyle={{ flex: 1 }}
-                      actionsStyle={{ padding: '8px 32px' }}
+                      actionsStyle={{ padding: '8px 32px', justifyContent: 'space-around' }}
                     >
                       <Card.Meta
                         title={item.play_name}
@@ -367,4 +366,4 @@ const Playlist = () => {
   );
 };
 
-export default Playlist; 
+export default Playlist;

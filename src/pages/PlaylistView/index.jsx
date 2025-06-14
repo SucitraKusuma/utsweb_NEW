@@ -1,7 +1,7 @@
 import { Col, Row, Typography, Card, List, Divider, Skeleton, Input, Button, notification, Tabs } from "antd";
 import { getDataPrivate } from "../../utils/api";
 import { useState, useEffect } from "react";
-import { SearchOutlined, PlayCircleOutlined, FolderOutlined } from "@ant-design/icons";
+import { SearchOutlined, PlayCircleOutlined, CustomerServiceOutlined, SoundOutlined, VideoCameraOutlined, ReadOutlined, AppstoreOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
@@ -14,12 +14,37 @@ const PlaylistView = () => {
   const [selectedGenre, setSelectedGenre] = useState(null);
 
   const genreOptions = [
-    { value: 'music', label: 'Music' },
-    { value: 'song', label: 'Song' },
-    { value: 'movie', label: 'Movie' },
-    { value: 'education', label: 'Education' },
-    { value: 'others', label: 'Others' }
+    { value: 'music', label: 'Music', color: '#0088FE' },
+    { value: 'song', label: 'Song', color: '#FFBB28' },
+    { value: 'movie', label: 'Movie', color: '#FF8042' },
+    { value: 'education', label: 'Education', color: '#8884d8' },
+    { value: 'others', label: 'Others', color: '#00C49F' }
   ];
+
+  const getGenreIcon = (genre) => {
+    const genreOption = genreOptions.find(g => g.value === genre);
+    const iconStyle = {
+      fontSize: '32px',
+      marginBottom: '8px',
+      color: selectedGenre === genre ? genreOption?.color : '#8c8c8c',
+      transition: 'all 0.3s ease'
+    };
+
+    switch (genre) {
+      case 'music':
+        return <CustomerServiceOutlined style={iconStyle} />;
+      case 'song':
+        return <SoundOutlined style={iconStyle} />;
+      case 'movie':
+        return <VideoCameraOutlined style={iconStyle} />;
+      case 'education':
+        return <ReadOutlined style={iconStyle} />;
+      case 'others':
+        return <AppstoreOutlined style={iconStyle} />;
+      default:
+        return null;
+    }
+  };
 
   const openNotificationWithIcon = (type, title, description) => {
     api[type]({
@@ -79,13 +104,31 @@ const PlaylistView = () => {
           <Card
             hoverable
             onClick={() => handleGenreClick(genre.value)}
-            style={{ 
+            style={{
               textAlign: 'center',
-              backgroundColor: selectedGenre === genre.value ? '#f0f2f5' : 'white'
+              backgroundColor: selectedGenre === genre.value ? '#f0f2f5' : 'white',
+              borderColor: selectedGenre === genre.value ? genre.color : '#d9d9d9',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'translateY(-5px)',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+              }
+            }}
+            bodyStyle={{
+              padding: '20px',
+              '&:hover': {
+                backgroundColor: '#fafafa'
+              }
             }}
           >
-            <FolderOutlined style={{ fontSize: '32px', marginBottom: '8px' }} />
-            <div>{genre.label}</div>
+            {getGenreIcon(genre.value)}
+            <div style={{ 
+              color: selectedGenre === genre.value ? genre.color : 'inherit',
+              fontWeight: selectedGenre === genre.value ? 'bold' : 'normal',
+              transition: 'all 0.3s ease'
+            }}>
+              {genre.label}
+            </div>
             <Text type="secondary">({genrePlaylists[genre.value]?.length || 0} playlist)</Text>
           </Card>
         </List.Item>
@@ -148,8 +191,8 @@ const PlaylistView = () => {
       <Row gutter={[24, 0]}>
         <Col xs={23} className="mb-24">
           <Card bordered={false} className="circlebox h-full w-full">
-            <Title>Daftar Playlist</Title>
-            <Text style={{ fontSize: "12pt" }}>Selamat Datang di Galeri Playlist</Text>
+            <Title>Galeri Playlist</Title>
+            <Text style={{ fontSize: "12pt" }}>Jelajahi berbagai koleksi video dalam galeri playlist – mulai dari musik santai hingga tutorial hacking!</Text>
             <Divider />
             
             <Tabs
@@ -185,4 +228,4 @@ const PlaylistView = () => {
   );
 };
 
-export default PlaylistView; 
+export default PlaylistView;

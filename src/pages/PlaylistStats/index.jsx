@@ -80,7 +80,7 @@ const PlaylistStats = () => {
         <Col xs={24}>
           <Card bordered={false} className="circlebox h-full w-full">
             <Title>Statistik Playlist</Title>
-            <Text style={{ fontSize: "12pt" }}>Analisis dan Statistik Playlist</Text>
+            <Text style={{ fontSize: "12pt" }}>Lihat statistik genre dan playlist kamu dalam satu halaman yang ringkas</Text>
             <Divider />
 
             {isLoading ? (

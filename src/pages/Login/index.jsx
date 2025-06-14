@@ -15,7 +15,7 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     console.log(username, password);
-    navigate("/playlist-view", { replace: true });
+    navigate("/beranda", { replace: true });
   };
 
   return (
