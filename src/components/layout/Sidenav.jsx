@@ -143,6 +143,38 @@ function Sidenav({ color }) {
       ),
     },
     {
+      key: "/playlist-view",
+      label: (
+        <NavLink to="/playlist-view">
+          <span
+            className="icon"
+            style={{
+              backgroundColor: selectedKey === "playlist-view" ? "#f0f2f5" : "",
+            }}
+          >
+            <PlayCircleOutlined />
+          </span>
+          <span className="label">Galeri Playlist</span>
+        </NavLink>
+      ),
+    },
+    {
+      key: "/playlist-stats",
+      label: (
+        <NavLink to="/playlist-stats">
+          <span
+            className="icon"
+            style={{
+              backgroundColor: selectedKey === "playlist-stats" ? "#f0f2f5" : "",
+            }}
+          >
+            <PieChartOutlined />
+          </span>
+          <span className="label">Statistik Playlist</span>
+        </NavLink>
+      ),
+    },
+    {
       key: "4",
       label: "Store",
       className: "menu-item-header",

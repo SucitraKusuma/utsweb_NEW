@@ -14,6 +14,15 @@ const Playlist = () => {
   const [api, contextHolder] = notification.useNotification();
   const [isEdit, setIsEdit] = useState(false);
   const [idSelected, setIdSelected] = useState(null);
+
+  const genreOptions = [
+    { value: 'music', label: 'Music' },
+    { value: 'song', label: 'Song' },
+    { value: 'movie', label: 'Movie' },
+    { value: 'education', label: 'Education' },
+    { value: 'others', label: 'Others' }
+  ];
+
   const openNotificationWithIcon = (type, title, description) => {
     api[type]({
       message: title,
@@ -85,7 +94,7 @@ const Playlist = () => {
     let playUrl = form.getFieldValue("play_url");
     let playThumbnail = form.getFieldValue("play_thumbnail");
     let playDescription = form.getFieldValue("play_description");
-    let playGenre = form.getFieldValue("play_genre") || "music";
+    let playGenre = form.getFieldValue("play_genre");
 
     let formData = new FormData();
     formData.append("play_name", playName);
@@ -154,13 +163,7 @@ const Playlist = () => {
         >
           <Select
             placeholder="Pilih genre"
-            options={[
-              { value: 'music', label: 'Music' },
-              { value: 'song', label: 'Song' },
-              { value: 'movie', label: 'Movie' },
-              { value: 'education', label: 'Education' },
-              { value: 'others', label: 'Others' }
-            ]}
+            options={genreOptions}
           />
         </Form.Item>
         
@@ -218,30 +221,75 @@ const Playlist = () => {
               allowClear
               size='large'
               onChange={(e) => handleSearch(e.target.value)}
+              style={{ marginBottom: 24 }}
             />
 
             {isLoading && dataSources.length <= 0 ? (
               <Skeleton active />
             ) : (
               <List
-                grid={{ gutter: 16, xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }}
+                grid={{ 
+                  gutter: 24,
+                  xl: 3,
+                  lg: 3,
+                  md: 2,
+                  sm: 1,
+                  xs: 1
+                }}
                 dataSource={dataSourcesFiltered ?? []}
                 renderItem={(item) => (
                   <List.Item>
                     <Card
                       hoverable
-                      cover={<img alt={item.play_name} src={item.play_thumbnail} />}
+                      cover={
+                        <div style={{ height: '200px', overflow: 'hidden' }}>
+                          <img 
+                            alt={item.play_name} 
+                            src={item.play_thumbnail} 
+                            style={{ 
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover'
+                            }}
+                          />
+                        </div>
+                      }
                       actions={[
                         <Button 
                           type="text" 
                           icon={<EditOutlined />} 
                           onClick={() => handleDrawerEdit(item)}
                           key="edit"
+                          style={{ 
+                            minWidth: 80,
+                            height: 40,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 500
+                          }}
                         >
                           Edit
                         </Button>,
-                        <a href={item.play_url} target="_blank" rel="noopener noreferrer">
-                          <Button type="text" icon={<PlayCircleOutlined />}>
+                        <a 
+                          href={item.play_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          key="play"
+                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        >
+                          <Button 
+                            type="text" 
+                            icon={<PlayCircleOutlined />}
+                            style={{
+                              minWidth: 80,
+                              height: 40,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontWeight: 500
+                            }}
+                          >
                             Play
                           </Button>
                         </a>,
@@ -253,18 +301,46 @@ const Playlist = () => {
                           okText="Yes"
                           cancelText="No"
                         >
-                          <Button type="text" danger icon={<DeleteOutlined />}>
+                          <Button 
+                            type="text" 
+                            danger 
+                            icon={<DeleteOutlined />}
+                            style={{ 
+                              minWidth: 80,
+                              height: 40,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontWeight: 500
+                            }}
+                          >
                             Delete
                           </Button>
                         </Popconfirm>
                       ]}
+                      style={{ 
+                        marginBottom: '16px',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column'
+                      }}
+                      bodyStyle={{ flex: 1 }}
                     >
                       <Card.Meta
                         title={item.play_name}
                         description={
                           <>
-                            <div>{item.play_description}</div>
-                            <div style={{ marginTop: 8 }}>
+                            <div style={{ 
+                              marginBottom: '8px',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical'
+                            }}>
+                              {item.play_description}
+                            </div>
+                            <div>
                               <Text type="secondary">Genre: {item.play_genre}</Text>
                             </div>
                           </>
