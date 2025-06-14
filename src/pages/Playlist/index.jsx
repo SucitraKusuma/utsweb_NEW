@@ -60,6 +60,9 @@ const Playlist = () => {
   });
 
   const openDrawer = () => {
+    form.resetFields();
+    setIsEdit(false);
+    setIdSelected(null);
     setIsOpenDrawer(true);
   };
 
@@ -111,6 +114,7 @@ const Playlist = () => {
           );
           setIsOpenDrawer(false);
           getDataPlaylist();
+          form.resetFields();
           onClose();
         } else {
           openNotificationWithIcon(
@@ -261,12 +265,13 @@ const Playlist = () => {
                           onClick={() => handleDrawerEdit(item)}
                           key="edit"
                           style={{ 
-                            minWidth: 80,
-                            height: 40,
+                            minWidth: 70,
+                            height: 32,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontWeight: 500
+                            fontWeight: 500,
+                            margin: '0 4px'
                           }}
                         >
                           Edit
@@ -282,12 +287,13 @@ const Playlist = () => {
                             type="text" 
                             icon={<PlayCircleOutlined />}
                             style={{
-                              minWidth: 80,
-                              height: 40,
+                              minWidth: 70,
+                              height: 32,
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              fontWeight: 500
+                              fontWeight: 500,
+                              margin: '0 4px'
                             }}
                           >
                             Play
@@ -306,12 +312,14 @@ const Playlist = () => {
                             danger 
                             icon={<DeleteOutlined />}
                             style={{ 
-                              minWidth: 80,
-                              height: 40,
+                              minWidth: 70,
+                              height: 32,
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              fontWeight: 500
+                              fontWeight: 500,
+                              marginLeft: '0px',
+                              marginRight: '-5px'
                             }}
                           >
                             Delete
@@ -325,6 +333,7 @@ const Playlist = () => {
                         flexDirection: 'column'
                       }}
                       bodyStyle={{ flex: 1 }}
+                      actionsStyle={{ padding: '8px 32px' }}
                     >
                       <Card.Meta
                         title={item.play_name}
@@ -358,4 +367,4 @@ const Playlist = () => {
   );
 };
 
-export default Playlist;
+export default Playlist; 
