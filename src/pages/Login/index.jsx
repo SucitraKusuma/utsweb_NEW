@@ -22,12 +22,10 @@ const LoginPage = () => {
     <Layout className="layout-default layout-signin">
       <Header>
         <div className="header-col header-brand">
-          <h5>rems</h5>
+          <h5>CODE & CHAOOZZ  </h5>
         </div>
         <div className="header-col header-nav">test</div>
-        <div className="header-col header-btn">
-          <Button type="primary">Public Sites</Button>
-        </div>
+
       </Header>
       <Content className="signin login-container">
         <Row gutter={[24, 0]} justify="space-around">
@@ -37,8 +35,16 @@ const LoginPage = () => {
             lg={{ span: 8, offset: 4 }}
             md={{ span: 12 }}
           >
-            <img src={SignBG} alt="" />
-            {/* <img src="/login.gif" alt="img-login" /> */}
+            <img 
+              src="/src/assets/images/code&chaozfix.png" 
+              alt="Code and Chaoz" 
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                borderRadius: '30px'
+              }}
+            />
           </Col>
           <Col xs={{ span: 24 }} lg={{ span: 8 }} md={{ span: 12 }}>
             <Title className="mb-15">Sign In</Title>
@@ -100,8 +106,7 @@ const LoginPage = () => {
       <Footer>
         <p className="copyright">
           {" "}
-          Copyright © 2024 WebfmSI.com - Powered by Universitas Pendidikan
-          Ganesha
+          Copyright © 2024 WebfmSI.com - Edited by Code & Chaozz Tim
         </p>
       </Footer>
     </Layout>

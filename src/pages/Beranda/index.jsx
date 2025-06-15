@@ -108,9 +108,17 @@ const Beranda = () => {
               </Paragraph>
               {/* Gambar Hero Placeholder */}
               <img 
-                src="hhttps://i.ytimg.com/an_webp/bW4tmblLS6Y/mqdefault_6s.webp?du=3000&sqp=CPbctMIG&rs=AOn4CLBZfiHsHdHty7ypYYvUKg6IFnNS9Q" 
-                alt="Hero Banner" 
-                style={{ width: '100%', maxWidth: '800px', borderRadius: '8px', marginTop: '24px' }}
+                src="/src/assets/images/code&chaoz3.png"
+                alt="Code and Chaoz"
+                style={{ 
+                  width: '100%', 
+                  maxWidth: '700px', 
+                  height: '250px',
+                  objectFit: 'cover',
+                  borderRadius: '8px', 
+                  marginTop: '70px', 
+                  marginBottom: '45px'
+                }}
               />
             </div>
 

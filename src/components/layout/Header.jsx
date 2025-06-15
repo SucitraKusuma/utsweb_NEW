@@ -92,9 +92,10 @@ function Header({
       {/* <div className="setting-drwer" onClick={showDrawer}>
         {setting}
       </div> */}
+      {/* kosong ni */}
       <Row gutter={[24, 0]}>
         <Col span={24} md={8}>
-          <div>SIFORS</div>
+          <div></div>
         </Col>
         <Col span={24} md={16} className="header-control">
           <Button type="link" onClick={showDrawer}>

@@ -9,6 +9,7 @@ const Playlist = () => {
   const [dataSources, setDataSources] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState("all");
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
@@ -16,6 +17,7 @@ const Playlist = () => {
   const [idSelected, setIdSelected] = useState(null);
 
   const genreOptions = [
+    { value: 'all', label: 'Semua Genre' },
     { value: 'music', label: 'Music' },
     { value: 'song', label: 'Song' },
     { value: 'movie', label: 'Movie' },
@@ -54,9 +56,15 @@ const Playlist = () => {
   const handleSearch = (value) => {
     setSearchText(value.toLowerCase());
   };
+
+  const handleGenreChange = (value) => {
+    setSelectedGenre(value);
+  };
   
   let dataSourcesFiltered = dataSources.filter((item) => {
-    return item?.play_name?.toLowerCase().includes(searchText);
+    const matchesSearch = item?.play_name?.toLowerCase().includes(searchText);
+    const matchesGenre = selectedGenre === 'all' || item?.play_genre === selectedGenre;
+    return matchesSearch && matchesGenre;
   });
 
   const openDrawer = () => {
@@ -79,7 +87,7 @@ const Playlist = () => {
     setIsOpenDrawer(true);
     
     setIsEdit(true);
-    setIdSelected(record.id_play);
+    setIdSelected(recordp.id_play);
     form.setFieldsValue({
       play_name: record.play_name,
       play_url: record.play_url,
@@ -219,14 +227,24 @@ const Playlist = () => {
             <Text style={{ fontSize: "12pt" }}>Satukan semua video favoritmu dalam satu tempat spesial!</Text>
             <Divider />
             
-            <Input
-              prefix={<SearchOutlined />}
-              placeholder="Cari playlist..."
-              allowClear
-              size='large'
-              onChange={(e) => handleSearch(e.target.value)}
-              style={{ marginBottom: 24 }}
-            />
+            <div style={{ display: 'flex', gap: '16px', marginBottom: 24 }}>
+              <Input
+                prefix={<SearchOutlined />}
+                placeholder="Cari playlist..."
+                allowClear
+                size='large'
+                onChange={(e) => handleSearch(e.target.value)}
+                style={{ flex: 1 }}
+              />
+              <Select
+                placeholder="Filter Genre"
+                style={{ width: 200 }}
+                value={selectedGenre}
+                onChange={handleGenreChange}
+                options={genreOptions}
+                size='large'
+              />
+            </div>
 
             {isLoading && dataSources.length <= 0 ? (
               <Skeleton active />
@@ -245,19 +263,14 @@ const Playlist = () => {
                   <List.Item>
                     <Card
                       hoverable
-                      cover={
-                        <div style={{ height: '200px', overflow: 'hidden' }}>
-                          <img 
-                            alt={item.play_name} 
-                            src={item.play_thumbnail} 
-                            style={{ 
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'cover'
-                            }}
-                          />
-                        </div>
-                      }
+                      style={{ 
+                        marginBottom: '16px',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column'
+                      }}
+                      bodyStyle={{ flex: 1 }}
+                      actionsStyle={{ padding: '8px 32px', justifyContent: 'space-around' }}
                       actions={[
                         <Button 
                           type="text" 
@@ -325,17 +338,22 @@ const Playlist = () => {
                           </Button>
                         </Popconfirm>
                       ]}
-                      style={{ 
-                        marginBottom: '16px',
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column'
-                      }}
-                      bodyStyle={{ flex: 1 }}
-                      actionsStyle={{ padding: '8px 32px', justifyContent: 'space-around' }}
                     >
+                      <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 8 }}>
+                        {item.play_name}
+                      </div>
+                      <div style={{ height: '140px', overflow: 'hidden', marginBottom: 8 }}>
+                        <img 
+                          alt={item.play_name} 
+                          src={item.play_thumbnail} 
+                          style={{ 
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
+                          }}
+                        />
+                      </div>
                       <Card.Meta
-                        title={item.play_name}
                         description={
                           <>
                             <div style={{ 

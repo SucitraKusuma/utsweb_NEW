@@ -151,23 +151,26 @@ const PlaylistView = () => {
         <Skeleton active />
       ) : (
         <List
-          grid={{ gutter: 16, xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }}
+          grid={{ gutter: 0, xl: 3, lg: 3, md: 2, sm: 1, xs: 1 }}
           dataSource={filterPlaylists(playlists)}
           renderItem={(item) => (
             <List.Item>
               <Card
                 hoverable
-                cover={<img alt={item.play_name} src={item.play_thumbnail} />}
-                actions={[
-                  <a href={item.play_url} target="_blank" rel="noopener noreferrer">
-                    <Button type="text" icon={<PlayCircleOutlined />}>
-                      Play
-                    </Button>
-                  </a>
-                ]}
+                style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                bodyStyle={{ flex: 1 }}
               >
+                <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 8 }}>
+                  {item.play_name}
+                </div>
+                <div style={{ height: '140px', overflow: 'hidden', marginBottom: 8 }}>
+                  <img
+                    alt={item.play_name}
+                    src={item.play_thumbnail}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
                 <Card.Meta
-                  title={item.play_name}
                   description={
                     <>
                       <div>{item.play_description}</div>
@@ -177,6 +180,11 @@ const PlaylistView = () => {
                     </>
                   }
                 />
+                <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center' }}>
+                  <a href={item.play_url} target="_blank" rel="noopener noreferrer">
+                    <Button type="text" icon={<PlayCircleOutlined />}>Play</Button>
+                  </a>
+                </div>
               </Card>
             </List.Item>
           )}

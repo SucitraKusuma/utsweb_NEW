@@ -6,11 +6,11 @@ import "./assets/styles/responsive.css";
 import "./assets/styles/adaptive.css";
 
 import LoginPage from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
+
 import PrivateRoute from "./components/layout/PrivateRoute";
-import Playlist from "./pages/Playlist";
-import PlaylistView from "./pages/PlaylistView";
-import PlaylistStats from "./pages/PlaylistStats";
+import AturPlaylist from "./pages/AturPlaylist";
+import GaleryPlaylist from "./pages/GaleryPlaylist";
+import StatistikPlaylist from "./pages/StatistikPlaylist";
 import Beranda from "./pages/Beranda";
 
 function App() {
@@ -19,25 +19,21 @@ function App() {
       <Routes>
         <Route exact path="/" element={<LoginPage />} />
         <Route exact path="/login" element={<LoginPage />} />
-        <Route
-          exact
-          path="/dashboard"
-          element={<PrivateRoute component={<Dashboard />} />}
-        />
+
         <Route
           exact
           path="/playlist"
-          element={<PrivateRoute component={<Playlist />} />}
+          element={<PrivateRoute component={<AturPlaylist />} />}
         />
         <Route
           exact
           path="/playlist-view"
-          element={<PrivateRoute component={<PlaylistView />} />}
+          element={<PrivateRoute component={<GaleryPlaylist />} />}
         />
         <Route
           exact
           path="/playlist-stats"
-          element={<PrivateRoute component={<PlaylistStats />} />}
+          element={<PrivateRoute component={<StatistikPlaylist />} />}
         />
         <Route
           exact
