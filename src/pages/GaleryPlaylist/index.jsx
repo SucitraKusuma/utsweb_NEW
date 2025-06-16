@@ -1,18 +1,29 @@
+// Import komponen dan utilitas yang diperlukan
 import { Col, Row, Typography, Card, List, Divider, Skeleton, Input, Button, notification, Tabs } from "antd";
 import { getDataPrivate } from "../../utils/api";
 import { useState, useEffect } from "react";
 import { SearchOutlined, PlayCircleOutlined, CustomerServiceOutlined, SoundOutlined, VideoCameraOutlined, ReadOutlined, AppstoreOutlined } from "@ant-design/icons";
+import { useLocation } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
 const PlaylistView = () => {
+  // State untuk menyimpan semua playlist
   const [allPlaylists, setAllPlaylists] = useState([]);
+  // State untuk menyimpan playlist berdasarkan genre
   const [genrePlaylists, setGenrePlaylists] = useState({});
+  // State untuk menangani loading state
   const [isLoading, setIsLoading] = useState(true);
+  // State untuk menyimpan teks pencarian
   const [searchText, setSearchText] = useState("");
+  // Notification instance dari antd
   const [api, contextHolder] = notification.useNotification();
+  // State untuk menyimpan genre yang dipilih
   const [selectedGenre, setSelectedGenre] = useState(null);
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState('1');
 
+  // Konfigurasi opsi genre dengan warna masing-masing
   const genreOptions = [
     { value: 'music', label: 'Music', color: '#0088FE' },
     { value: 'song', label: 'Song', color: '#FFBB28' },
@@ -21,6 +32,7 @@ const PlaylistView = () => {
     { value: 'others', label: 'Others', color: '#00C49F' }
   ];
 
+  // Fungsi untuk mendapatkan icon berdasarkan genre
   const getGenreIcon = (genre) => {
     const genreOption = genreOptions.find(g => g.value === genre);
     const iconStyle = {
@@ -46,6 +58,7 @@ const PlaylistView = () => {
     }
   };
 
+  // Fungsi untuk menampilkan notifikasi
   const openNotificationWithIcon = (type, title, description) => {
     api[type]({
       message: title,
@@ -53,17 +66,27 @@ const PlaylistView = () => {
     });
   };
 
+  // Mengambil data playlist saat komponen dimount
   useEffect(() => {
     getDataPlaylist();
   }, []);
 
+  // Ketika halaman dibuka dengan state genre dari navigasi, set tab dan genre otomatis
+  useEffect(() => {
+    if (location.state && location.state.genre) {
+      setSelectedGenre(location.state.genre);
+      setActiveTab('2');
+    }
+  }, [location.state]);
+
+  // Fungsi untuk mengambil data playlist dari API
   const getDataPlaylist = () => {
     setIsLoading(true);
     getDataPrivate("/api/playlist/49")
       .then((resp) => {
         if (resp?.datas) {
           setAllPlaylists(resp.datas);
-          // Inisialisasi data per genre
+          // Mengelompokkan playlist berdasarkan genre
           const genreData = {};
           genreOptions.forEach(genre => {
             genreData[genre.value] = resp.datas.filter(item => item.play_genre === genre.value);
@@ -81,20 +104,24 @@ const PlaylistView = () => {
       });
   };
 
+  // Handler untuk pencarian
   const handleSearch = (value) => {
     setSearchText(value.toLowerCase());
   };
 
+  // Handler untuk klik genre
   const handleGenreClick = (genre) => {
     setSelectedGenre(genre);
   };
   
+  // Filter playlist berdasarkan teks pencarian
   const filterPlaylists = (playlists) => {
     return playlists.filter((item) => {
       return item?.play_name?.toLowerCase().includes(searchText);
     });
   };
 
+  // Render folder genre
   const renderGenreFolders = () => (
     <List
       grid={{ gutter: 16, xl: 5, lg: 4, md: 3, sm: 2, xs: 1 }}
@@ -136,8 +163,10 @@ const PlaylistView = () => {
     />
   );
 
+  // Render daftar playlist
   const renderPlaylists = (playlists) => (
     <>
+      {/* Search input */}
       <Input
         prefix={<SearchOutlined />}
         placeholder="Cari playlist..."
@@ -147,29 +176,45 @@ const PlaylistView = () => {
         style={{ marginBottom: '16px' }}
       />
 
+      {/* Loading state atau list playlist */}
       {isLoading ? (
         <Skeleton active />
       ) : (
         <List
-          grid={{ gutter: 0, xl: 3, lg: 3, md: 2, sm: 1, xs: 1 }}
+          grid={{ 
+            gutter: 16,
+            xl: 3,
+            lg: 3,
+            md: 2,
+            sm: 1,
+            xs: 1
+          }}
           dataSource={filterPlaylists(playlists)}
           renderItem={(item) => (
             <List.Item>
               <Card
                 hoverable
-                style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                style={{ 
+                  height: '100%', 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  marginBottom: 16
+                }}
                 bodyStyle={{ flex: 1 }}
               >
+                {/* Judul playlist */}
                 <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 8 }}>
                   {item.play_name}
                 </div>
-                <div style={{ height: '140px', overflow: 'hidden', marginBottom: 8 }}>
+                {/* Thumbnail playlist */}
+                <div style={{ height: '170px', overflow: 'hidden', marginBottom: 8 }}>
                   <img
                     alt={item.play_name}
                     src={item.play_thumbnail}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 </div>
+                {/* Meta informasi playlist */}
                 <Card.Meta
                   description={
                     <>
@@ -180,6 +225,7 @@ const PlaylistView = () => {
                     </>
                   }
                 />
+                {/* Tombol play */}
                 <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center' }}>
                   <a href={item.play_url} target="_blank" rel="noopener noreferrer">
                     <Button type="text" icon={<PlayCircleOutlined />}>Play</Button>
@@ -193,6 +239,7 @@ const PlaylistView = () => {
     </>
   );
 
+  // Render komponen utama
   return (
     <div className="layout-content">
       {contextHolder}
@@ -203,8 +250,10 @@ const PlaylistView = () => {
             <Text style={{ fontSize: "12pt" }}>Jelajahi berbagai koleksi video dalam galeri playlist – mulai dari musik santai hingga tutorial hacking!</Text>
             <Divider />
             
+            {/* Tab untuk navigasi antara semua genre dan pilih genre */}
             <Tabs
-              defaultActiveKey="1"
+              activeKey={activeTab}
+              onChange={setActiveTab}
               items={[
                 {
                   key: '1',

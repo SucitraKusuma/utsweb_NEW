@@ -10,12 +10,24 @@ const Beranda = () => {
   // Contoh data simulasi untuk statistik mini dan highlight playlist
   const [totalPlaylists, setTotalPlaylists] = useState(125);
   const [availableGenres, setAvailableGenres] = useState(8);
-  const [popularGenre, setPopularGenre] = useState('Musik Lo-Fi');
-  const [userName, setUserName] = useState('Gita'); // Ganti dengan nama pengguna sebenarnya dari konteks login
-  const [userPlaylistsCount, setUserPlaylistsCount] = useState(8); // Ganti dengan jumlah playlist pengguna sebenarnya
+  const [popularGenre, setPopularGenre] = useState('music');
+  const [userName, setUserName] = useState('Gita');
+  const [userPlaylistsCount, setUserPlaylistsCount] = useState(8);
 
   const [highlightPlaylists, setHighlightPlaylists] = useState([]);
   const [isLoadingHighlights, setIsLoadingHighlights] = useState(true);
+
+  // Fungsi untuk mengubah format genre menjadi lebih user-friendly
+  const formatGenre = (genre) => {
+    const genreMap = {
+      'music': 'Music',
+      'song': 'Song',
+      'movie': 'Movie',
+      'education': 'Education',
+      'others': 'Others'
+    };
+    return genreMap[genre] || genre;
+  };
 
   useEffect(() => {
     fetchHighlightPlaylists();
@@ -297,7 +309,7 @@ const Beranda = () => {
               <Col xs={24} sm={8}>
                 <Card hoverable>
                   <Text strong>Genre Terpopuler:</Text><br/>
-                  <Title level={4}>{popularGenre}</Title>
+                  <Title level={4}>{formatGenre(popularGenre)}</Title>
                 </Card>
               </Col>
             </Row>

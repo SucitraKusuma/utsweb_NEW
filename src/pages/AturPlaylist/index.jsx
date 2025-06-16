@@ -87,7 +87,7 @@ const Playlist = () => {
     setIsOpenDrawer(true);
     
     setIsEdit(true);
-    setIdSelected(recordp.id_play);
+    setIdSelected(record.id_play);
     form.setFieldsValue({
       play_name: record.play_name,
       play_url: record.play_url,
@@ -278,7 +278,7 @@ const Playlist = () => {
                           onClick={() => handleDrawerEdit(item)}
                           key="edit"
                           style={{
-                            minWidth: 65,
+                            minWidth: 90,
                             height: 32,
                             display: 'flex',
                             alignItems: 'center',
@@ -325,7 +325,7 @@ const Playlist = () => {
                             danger 
                             icon={<DeleteOutlined />} 
                             style={{
-                              minWidth: 65,
+                              minWidth: 90,
                               height: 32,
                               display: 'flex',
                               alignItems: 'center',
